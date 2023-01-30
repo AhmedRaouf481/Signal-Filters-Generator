@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  color: red;
+}
+
+.IncButton {
+  background-color: #8181f9;
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+}
