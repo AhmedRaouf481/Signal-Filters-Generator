@@ -29,6 +29,13 @@ def getFrequencyResponce():
        
         return w, angles, magnitude
 
+def all_Pass_Filter(zeros_list, poles_list, a_list):
+    for index in a_list:
+        poles_list.append(index)
+        zeros_list.append(1/np.conj(index))
+
+    return zeros_list, poles_list        
+
 w, angles, magnitude= getFrequencyResponce()
 print(w,angles,magnitude)
 
