@@ -1,14 +1,8 @@
-// import { AppContext } from "../../context/context.jsx";
 import React from "react";
 import Plot from "react-plotly.js";
 
-// import style from "./style.module.css";
-
 const Graph = ({ x, y, width, height, color }) => {
   var trace = {
-    // x: Array.from({ length: 1000 }, (v, k) => k + 1),
-    // y: Array.from({ length: 1000 }, (v, k) => k ** 2),
-
     x: x,
     y: y,
     type: "scatter",
@@ -21,6 +15,13 @@ const Graph = ({ x, y, width, height, color }) => {
   var layout = {
     width: width,
     height: height,
+    margin: {
+      l: 50,
+      r: 50,
+      b: 50,
+      t: 50,
+      pad: 4,
+    },
   };
 
   return <Plot data={[trace]} layout={layout} />;
