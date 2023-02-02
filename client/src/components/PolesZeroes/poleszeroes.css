@@ -1,0 +1,51 @@
+.graph{
+    background-color: #ececec;
+    width: 300px;
+    height: 300px;
+    margin: 32px;
+    cursor: pointer;
+}
+.x-axis{
+    background-color:#0e0e0e;
+    height: 1px;
+    width: 100%;
+    position: relative;
+    top: 150px;
+}
+.y-axis{
+    background-color:#0e0e0e;
+    width: 1px;
+    height: 100%;
+    position: relative;
+    left: 150px;
+}
+.unit_circle{
+    border: 1px solid #0e0e0e ;
+    border-radius: 50%;
+    width: 256px;
+    height: 256px;
+    position: absolute;
+    top: 54px;
+    left: 54px;
+}
+
+.zero{
+    /* border: 5px solid;
+    border-radius: 50%; */
+    color: red;
+    width: 13px;
+    height: 13px;
+    position: absolute;
+}
+.pole{
+    color: rgb(0, 47, 255);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+}
+
+.switch_btn{
+    margin: 32px 0 0 32px;
+
+}
+

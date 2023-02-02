@@ -1,8 +1,8 @@
 // import style from "./style.module.css";
-import Test from "../../components/test/index";
+import PolesZeroes from "../../components/PolesZeroes/PolesZeros";
 
 const Home = () => {
-  return <Test />;
+  return <PolesZeroes />;
 };
 
 export default Home;
