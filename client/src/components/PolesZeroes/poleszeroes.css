@@ -30,18 +30,18 @@
 }
 
 .zero{
-    /* border: 5px solid;
-    border-radius: 50%; */
     color: red;
     width: 14px;
     height: 14px;
     position: absolute;
+    cursor: grab;
 }
 .pole{
     color: rgb(0, 47, 255);
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
     position: absolute;
+    cursor: grab;
 }
 
 .switch_btn{
@@ -49,3 +49,17 @@
 
 }
 
+.menu{
+    background-color: #646464;
+    color: #ececec;
+    border-radius: 5px;
+    display: block;
+    width: 120px;
+    padding: 2px;
+    display: none;
+    position: relataive;
+}
+
+/* .point:hover .menu{
+    display: block;
+} */

@@ -4,80 +4,98 @@ import React, { useState, useEffect } from "react";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import "./poleszeroes.css";
 
+
+// Constants
+const marginX = 7
+const marginY = 14
+const orgin = 182
+const redius = 128
+
 const PolesZeroes = () => {
     const [polesZeroesList, setPolesZeroesList] = useState([])
     const [point, setPoint] = useState({})
     const [type, setType] = useState(false)
     const [isDraggable, setIsDraggable] = useState(false)
 
-    // Constants
-    const marginX = 7
-    const marginY = 14
-    const orgin = 182
-    const redius = 128
-
-    // Methods
-
-    const mapCoordinate = (coordinate, margin, sign = 1) => {
-        coordinate = (coordinate + margin - orgin) / redius * sign
-        return coordinate
-    }
-
+    // onClick add a zero or pole
     const addPoint = (e) => {
-        e.stopPropagation()
-        setPoint({
-            type,
-            x: e.clientX - marginX,
-            y: e.clientY - marginY
-        })
-        // console.log(e.clientX)
-        // console.log(e.clientY)
+        if (
+            e.clientX < 332 - marginX
+            && e.clientX > 32 + marginX
+            && e.clientY < 332 - marginX
+            && e.clientY > 32 + marginX
+        ) {
+            setPoint({
+                type,
+                x: e.clientX - marginX,
+                y: e.clientY - marginY
+            })
+        }
     }
-
+    
+    // for every point added append it in polesZeroesList
     useEffect(() => {
         if (Object.keys(point).length !== 0 && polesZeroesList.indexOf(point) === -1) {
             setPolesZeroesList((list) => ([...list, point]))
-            // console.log(polesZeroesList);
-
         }
     }, [point])
-    
+
+    // send the points to the backend
     useEffect(() => {
         const zeroes = []
         const poles = []
-        polesZeroesList.map((point,index) => {
-            const x = mapCoordinate(point.x,marginX)
-            const y = mapCoordinate(point.y,marginY,-1)
-            if(point.type === false){
-                zeroes.push({x,y})
-            }else{
-                poles.push({x,y})
+        polesZeroesList.map((point, index) => {
+            const x = mapCoordinate(point.x, marginX)
+            const y = mapCoordinate(point.y, marginY, -1)
+            if (point.type === false) {
+                zeroes.push({ x, y })
+            } else {
+                poles.push({ x, y })
             }
         })
         console.log(zeroes);
-        console.log(poles);
+        // console.log(poles);
         console.log(polesZeroesList);
-    }, [polesZeroesList])
+    }, [polesZeroesList, isDraggable])
 
+
+    // ******************************** Move or Delete a point functions ********************************
+    
+    // onClick
     const selectPoint = (e) => {
         e.stopPropagation();
         setIsDraggable(!isDraggable)
         const myPoint = polesZeroesList[e.currentTarget.id]
-        myPoint.x = e.clientX - marginX
-        myPoint.y = e.clientY - marginY
+        if (e.clientX < 330 - marginX && e.clientX > 32 + marginX) {
+            myPoint.x = e.clientX - marginX
+        }
+        if (e.clientY < 332 - marginX && e.clientY > 32 + marginX) {
+            myPoint.y = e.clientY - marginY
+        }
+        console.log(e.clientX)
+        console.log(e.clientY)
     }
 
+    // onMouseMove
     const dragPoint = (e) => {
         e.stopPropagation();
         if (isDraggable) {
-            e.currentTarget.style.left = e.clientX - marginX + "px"
-            e.currentTarget.style.top = e.clientY - marginY + "px"
-            // console.log(e.currentTarget.style.top);
-            // console.log("x", e.clientX)
-            // console.log("y", e.clientY)
+            e.currentTarget.style.cursor = "grabbing"
+            if (e.clientX < 330 - marginX && e.clientX > 32 + marginX) {
+
+                e.currentTarget.style.left = e.clientX - marginX + "px"
+            }
+            if (e.clientY < 332 - marginX && e.clientY > 32 + marginX) {
+                e.currentTarget.style.top = e.clientY - marginY + "px"
+            }
+        }
+        else {
+
+            e.currentTarget.style.cursor = "grab"
         }
     }
 
+    // onContextMenu (double click)
     const deletePoint = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -89,10 +107,11 @@ const PolesZeroes = () => {
 
     }
 
+    // ******************************** End of Move or Delete a point functions ********************************
+
 
     return (
-        <div>
-
+        <>
             <div
                 className="graph"
                 onClick={addPoint}
@@ -112,11 +131,18 @@ const PolesZeroes = () => {
                             onContextMenu={deletePoint}
                             onMouseMove={dragPoint}
                         >
+                            <div className="point">
 
-                            <FontAwesomeIcon
-                                icon={point.type ? faXmark : faCircle}
-                                style={{ width: "100%", height: "100%" }}
-                            />
+
+                                <div className="menu">
+                                    <p>To delete click on the right click</p>
+                                </div>
+                                <FontAwesomeIcon
+                                    icon={point.type ? faXmark : faCircle}
+                                    style={{ width: "100%", height: "100%" }}
+
+                                />
+                            </div>
                         </div>
 
                     ))
@@ -135,8 +161,14 @@ const PolesZeroes = () => {
                     setType(!type)
                 }}
             />
-        </div>
+        </>
     );
+
 };
+
+const mapCoordinate = (coordinate, margin, sign = 1) => {
+    coordinate = (coordinate + margin - orgin) / redius * sign
+    return coordinate
+}
 
 export default PolesZeroes;
