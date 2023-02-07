@@ -41,18 +41,24 @@ const FilterPlot = () => {
   };
 
   return (
-    <div className={style.container}>
-      <Graph x={wPoints} y={magPoints} width={500} height={300} color="grey" />
+    <>
+      <Graph
+        x={wPoints}
+        y={magPoints}
+        color="grey"
+        className={style.graph}
+        height="30%"
+      />
       <Graph
         x={wPoints}
         y={phasePoints}
-        width={500}
-        height={300}
         color="grey"
+        className={style.graph}
+        height="30%"
       />
 
       <button onClick={filter}>Filter</button>
-    </div>
+    </>
   );
 };
 

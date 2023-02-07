@@ -13,18 +13,23 @@ const Graph = ({ x, y, width, height, color }) => {
   };
 
   var layout = {
-    width: width,
-    height: height,
     margin: {
-      l: 50,
-      r: 50,
-      b: 50,
-      t: 50,
+      l: 30,
+      r: 25,
+      b: 25,
+      t: 20,
       pad: 4,
     },
   };
 
-  return <Plot data={[trace]} layout={layout} />;
+  return (
+    <Plot
+      data={[trace]}
+      layout={layout}
+      responsive={true}
+      style={{ width: "100%", height: height }}
+    />
+  );
 };
 
 export default Graph;

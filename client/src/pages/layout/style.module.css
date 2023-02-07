@@ -53,3 +53,8 @@
 .navBar {
   height: 3rem;
 }
+
+.home {
+  width: 100vw;
+  height: 100vh;
+}
