@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faCircle } from '@fortawesome/free-solid-svg-icons'
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import "./poleszeroes.css";
 import axios from "../../globals/api/axios"
+import { AppContext } from "../../context/context.jsx";
 
 
 // Constants
@@ -18,6 +19,12 @@ const startBorderY = 438
 const endBorderY = 138
 
 const PolesZeroes = () => {
+    const {
+        setMagPoints,
+        setphasePoints,
+        setWPoints
+    } = useContext(AppContext);
+
     const [polesZeroesList, setPolesZeroesList] = useState([])
     const [point, setPoint] = useState({})
     const [type, setType] = useState(false)
@@ -47,21 +54,32 @@ const PolesZeroes = () => {
     }, [point])
 
     // send the points to the Backend
-    useEffect( () => {
+    useEffect(() => {
         const zeroes = []
         const poles = []
         polesZeroesList.map((point, index) => {
             const x = mapCoordinate(point.x, marginX, orginX)
             const y = mapCoordinate(point.y, marginY, orginY, -1)
             if (point.type === false) {
-                zeroes.push({ x, y })
+                zeroes.push([x, y])
             } else {
-                poles.push({ x, y })
+                poles.push([x, y])
             }
         })
-        console.log(zeroes);
+        axios.post('filter-data', { zeros: zeroes, poles })
+            .then((res) => {
+                console.log(res);
+                setMagPoints(res.data.mag)
+                setphasePoints(res.data.phase)
+                setWPoints(res.data.w)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+        // console.log(zeroes);
         // console.log(poles);
-        console.log(polesZeroesList);
+        // console.log(polesZeroesList);
     }, [polesZeroesList, isDraggable])
 
 
