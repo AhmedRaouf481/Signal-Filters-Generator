@@ -1,6 +1,14 @@
 .container {
   height: 30%;
   width: 100%;
-  background-color: red;
+  background-color: #4586ff;
   border-radius: 15px;
+}
+
+.plane {
+  margin: 1rem;
+  border-left: 1px solid #2b2b28;
+  border-bottom: 1px solid #2b2b28;
+  width: 90%;
+  height: 80%;
 }

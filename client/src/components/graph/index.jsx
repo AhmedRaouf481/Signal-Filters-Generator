@@ -1,7 +1,7 @@
 import React from "react";
 import Plot from "react-plotly.js";
 
-const Graph = ({ x, y, width, height, color }) => {
+const Graph = ({ x, y, width, height, color, title }) => {
   var trace = {
     x: x,
     y: y,
@@ -13,12 +13,23 @@ const Graph = ({ x, y, width, height, color }) => {
   };
 
   var layout = {
+    title: title,
     margin: {
-      l: 30,
+      l: 40,
       r: 25,
-      b: 25,
-      t: 20,
+      b: 15,
+      t: 40,
       pad: 4,
+    },
+
+    yaxis: {
+      visible: true,
+      // showticklabels: false,
+    },
+
+    xaxis: {
+      visible: true,
+      showticklabels: false,
     },
   };
 
