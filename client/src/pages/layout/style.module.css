@@ -8,7 +8,7 @@
   top: 0;
   left: -100%;
   transition: 850ms;
-  border-radius: 0 30px 30px 0;
+  border-radius: 0 20px 20px 0;
 }
 
 .navMenu.active {
@@ -48,4 +48,8 @@
 .navToggleBtn:hover {
   color: #4586ff;
   transform: scale(1.1);
+}
+
+.navBar {
+  height: 3rem;
 }

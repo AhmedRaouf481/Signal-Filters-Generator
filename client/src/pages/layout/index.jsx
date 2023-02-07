@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import style from "./style.module.css";
-import Home from "../pages/home/index";
-import { Container, Col, Row } from "react-bootstrap";
+import Home from "../home/index";
+
 function Layout() {
   const [sidebar, setSidebar] = useState(false);
 
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
-    <>
-      <Container fluid>
+    <div>
+      <div className={style.navBar}>
         <FaIcons.FaBars onClick={showSidebar} className={style.navToggleBtn} />
+      </div>
 
-        <Row>
-          <Home />
-        </Row>
-      </Container>
+      <Home />
+
       <nav className={`${style.navMenu} ${sidebar ? style.active : ""}`}>
         <div className={style.closeBar}>
           <AiIcons.AiOutlineClose
@@ -26,7 +25,7 @@ function Layout() {
           />
         </div>
       </nav>
-    </>
+    </div>
   );
 }
 
