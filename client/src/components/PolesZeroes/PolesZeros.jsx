@@ -9,13 +9,13 @@ import axios from "../../globals/api/axios"
 // Constants
 const marginX = 7
 const marginY = 14
-const orginX = 182
-const orginY = 232
+const orginX = 210
+const orginY = 288
 const redius = 128
-const startBorderX = 332
-const endBorderX = 32
-const startBorderY = 382
-const endBorderY = 82
+const startBorderX = 360
+const endBorderX = 60
+const startBorderY = 438
+const endBorderY = 138
 
 const PolesZeroes = () => {
     const [polesZeroesList, setPolesZeroesList] = useState([])
