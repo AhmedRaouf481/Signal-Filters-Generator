@@ -4,6 +4,7 @@
     height: 300px;
     margin: 32px;
     cursor: pointer;
+    /* position: relative; */
 }
 .x-axis{
     background-color:#0e0e0e;
@@ -25,7 +26,7 @@
     width: 256px;
     height: 256px;
     position: absolute;
-    top: 54px;
+    top: 104px;
     left: 54px;
 }
 
@@ -34,14 +35,14 @@
     width: 14px;
     height: 14px;
     position: absolute;
-    cursor: grab;
+    /* cursor: grab; */
 }
 .pole{
     color: rgb(0, 47, 255);
     width: 13px;
     height: 13px;
     position: absolute;
-    cursor: grab;
+    /* cursor: grab; */
 }
 
 .switch_btn{
