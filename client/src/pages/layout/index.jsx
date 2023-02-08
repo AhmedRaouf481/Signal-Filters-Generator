@@ -5,6 +5,7 @@ import style from "./style.module.css";
 import Home from "../home/index";
 import { AppContext } from "../../context/context.jsx";
 
+import Catalouge from "../../components/catalogue/index";
 function Layout() {
   const {
     polesZeroesList,
@@ -85,6 +86,7 @@ function Layout() {
             className={`${style.navToggleBtn} ${style.closeBtn}`}
           />
         </div>
+        <Catalouge />
       </nav>
     </div>
   );

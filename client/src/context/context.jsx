@@ -8,7 +8,7 @@ export const FileContextProvider = ({ children }) => {
   const [polesZeroesList, setPolesZeroesList] = useState([])
   const [zeros, setZeros] = useState([
     [0, 1],
-    [1, 0],
+    [1, 0]
   ]);
   const [poles, setPoles] = useState([[0, 0]]);
   const [magPoints, setMagPoints] = useState([]);
