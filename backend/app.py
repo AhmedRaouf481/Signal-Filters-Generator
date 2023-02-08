@@ -42,10 +42,10 @@ def all_Pass_Filter(zeros_list, poles_list, a_list):
 
     return zeros_list, poles_list
 
-def differenceEquationCoefficients():
-        zeros = To_Complex([(1,0)])
-        poles = To_Complex([(0,0)])
-        b, a = scipy.signal.zpk2tf(zeros, poles, 1)
+def differenceEquationCoefficients(zeros,poles):
+        zeros = To_Complex(zeros)
+        poles = To_Complex(poles)
+        b, a = scipy.signal.zpk2tf(zeros, poles, 1)        
         return a,b
 
 def max(a,b):
@@ -105,14 +105,12 @@ def filter(a, b, n, x, y) :
 
     return y_n
 
-signal_x=[]
-signal_y=[]
 # plt.plot(signal_x,signal_y)
 # plt.show()
 
 
-def get_yfiltered() :
-   a,b =differenceEquationCoefficients()
+def get_yfiltered(signal_x,signal_y,zeros,poles) :
+   a,b =differenceEquationCoefficients(zeros,poles)
    a,b=equatelength(a,b)
    x = signal_x[0]
    y = signal_y[0]
