@@ -36,7 +36,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: start;
-  width: 100%;
+  width: 10%;
   height: 4rem;
   padding: 0.2rem 0.2rem;
 }
@@ -58,3 +58,23 @@
   width: 100vw;
   height: 100vh;
 }
+
+.all_passs_input{
+  display: flex;
+  flex-direction: row;
+  /* background-color: red; */
+}
+
+.symbol{
+  color: white;
+  margin: 5% 0% 5% 0%;
+  font-size: xx-large;
+}
+
+.css-1x51dt5-MuiInputBase-input-MuiInput-input{
+  color: white !important;
+}
+
+/* .MuiInputBase-input{
+  background-color: white;
+} */
