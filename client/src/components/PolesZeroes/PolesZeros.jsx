@@ -3,13 +3,19 @@ import { faXmark, faCircle } from '@fortawesome/free-solid-svg-icons'
 import React, { useState, useEffect } from "react";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import "./poleszeroes.css";
+import axios from "../../globals/api/axios"
 
 
 // Constants
 const marginX = 7
 const marginY = 14
-const orgin = 182
+const orginX = 182
+const orginY = 232
 const redius = 128
+const startBorderX = 332
+const endBorderX = 32
+const startBorderY = 382
+const endBorderY = 82
 
 const PolesZeroes = () => {
     const [polesZeroesList, setPolesZeroesList] = useState([])
@@ -20,10 +26,10 @@ const PolesZeroes = () => {
     // onClick add a zero or pole
     const addPoint = (e) => {
         if (
-            e.clientX < 332 - marginX
-            && e.clientX > 32 + marginX
-            && e.clientY < 332 - marginX
-            && e.clientY > 32 + marginX
+            e.clientX < (startBorderX - marginX)
+            && e.clientX > (endBorderX + marginX)
+            && e.clientY < (startBorderY - marginX)
+            && e.clientY > (endBorderY + marginX)
         ) {
             setPoint({
                 type,
@@ -32,7 +38,7 @@ const PolesZeroes = () => {
             })
         }
     }
-    
+
     // for every point added append it in polesZeroesList
     useEffect(() => {
         if (Object.keys(point).length !== 0 && polesZeroesList.indexOf(point) === -1) {
@@ -40,13 +46,13 @@ const PolesZeroes = () => {
         }
     }, [point])
 
-    // send the points to the backend
-    useEffect(() => {
+    // send the points to the Backend
+    useEffect( () => {
         const zeroes = []
         const poles = []
         polesZeroesList.map((point, index) => {
-            const x = mapCoordinate(point.x, marginX)
-            const y = mapCoordinate(point.y, marginY, -1)
+            const x = mapCoordinate(point.x, marginX, orginX)
+            const y = mapCoordinate(point.y, marginY, orginY, -1)
             if (point.type === false) {
                 zeroes.push({ x, y })
             } else {
@@ -60,16 +66,16 @@ const PolesZeroes = () => {
 
 
     // ******************************** Move or Delete a point functions ********************************
-    
+
     // onClick
     const selectPoint = (e) => {
         e.stopPropagation();
         setIsDraggable(!isDraggable)
         const myPoint = polesZeroesList[e.currentTarget.id]
-        if (e.clientX < 330 - marginX && e.clientX > 32 + marginX) {
+        if (e.clientX < startBorderX - marginX && e.clientX > endBorderX + marginX) {
             myPoint.x = e.clientX - marginX
         }
-        if (e.clientY < 332 - marginX && e.clientY > 32 + marginX) {
+        if (e.clientY < startBorderY - marginX && e.clientY > endBorderY + marginX) {
             myPoint.y = e.clientY - marginY
         }
         console.log(e.clientX)
@@ -81,11 +87,11 @@ const PolesZeroes = () => {
         e.stopPropagation();
         if (isDraggable) {
             e.currentTarget.style.cursor = "grabbing"
-            if (e.clientX < 330 - marginX && e.clientX > 32 + marginX) {
+            if (e.clientX < startBorderX - marginX && e.clientX > endBorderX + marginX) {
 
                 e.currentTarget.style.left = e.clientX - marginX + "px"
             }
-            if (e.clientY < 332 - marginX && e.clientY > 32 + marginX) {
+            if (e.clientY < startBorderY - marginX && e.clientY > endBorderY + marginX) {
                 e.currentTarget.style.top = e.clientY - marginY + "px"
             }
         }
@@ -166,8 +172,8 @@ const PolesZeroes = () => {
 
 };
 
-const mapCoordinate = (coordinate, margin, sign = 1) => {
-    coordinate = (coordinate + margin - orgin) / redius * sign
+const mapCoordinate = (coordinate, margin, orgin, sign = 1) => {
+    coordinate = sign * (coordinate + margin - orgin) / redius
     return coordinate
 }
 
