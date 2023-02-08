@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faCircle } from '@fortawesome/free-solid-svg-icons'
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 import "./poleszeroes.css";
 import axios from "../../globals/api/axios"
@@ -10,22 +10,24 @@ import { AppContext } from "../../context/context.jsx";
 // Constants
 const marginX = 7
 const marginY = 14
-const orginX = 210
-const orginY = 288
+const orginX = 228
+const orginY = 268
 const redius = 128
-const startBorderX = 360
-const endBorderX = 60
-const startBorderY = 438
-const endBorderY = 138
+const startBorderX = 378
+const endBorderX = 78
+const startBorderY = 418
+const endBorderY = 118
 
 const PolesZeroes = () => {
     const {
+        polesZeroesList,
+        setPolesZeroesList,
         setMagPoints,
         setphasePoints,
         setWPoints
     } = useContext(AppContext);
 
-    const [polesZeroesList, setPolesZeroesList] = useState([])
+    // const [polesZeroesList, setPolesZeroesList] = useState([])
     const [point, setPoint] = useState({})
     const [type, setType] = useState(false)
     const [isDraggable, setIsDraggable] = useState(false)
@@ -55,18 +57,18 @@ const PolesZeroes = () => {
 
     // send the points to the Backend
     useEffect(() => {
-        const zeroes = []
+        const zeros = []
         const poles = []
         polesZeroesList.map((point, index) => {
             const x = mapCoordinate(point.x, marginX, orginX)
             const y = mapCoordinate(point.y, marginY, orginY, -1)
             if (point.type === false) {
-                zeroes.push([x, y])
+                zeros.push([x, y])
             } else {
                 poles.push([x, y])
             }
         })
-        axios.post('filter-data', { zeros: zeroes, poles })
+        axios.post('filter-data', { zeros, poles })
             .then((res) => {
                 console.log(res);
                 setMagPoints(res.data.mag)
@@ -77,8 +79,8 @@ const PolesZeroes = () => {
                 console.log(err)
             })
 
-        // console.log(zeroes);
-        // console.log(poles);
+        console.log(zeros);
+        console.log(poles);
         // console.log(polesZeroesList);
     }, [polesZeroesList, isDraggable])
 
@@ -96,8 +98,8 @@ const PolesZeroes = () => {
         if (e.clientY < startBorderY - marginX && e.clientY > endBorderY + marginX) {
             myPoint.y = e.clientY - marginY
         }
-        console.log(e.clientX)
-        console.log(e.clientY)
+        // console.log(e.clientX)
+        // console.log(e.clientY)
     }
 
     // onMouseMove
@@ -133,6 +135,13 @@ const PolesZeroes = () => {
 
     // ******************************** End of Move or Delete a point functions ********************************
 
+    const clearAllZeros = () => {
+        setPolesZeroesList(polesZeroesList.filter((point) => point.type === true))
+    }
+
+    const clearAllPoles = () => {
+        setPolesZeroesList(polesZeroesList.filter((point) => point.type === false))
+    }
 
     return (
         <>
@@ -155,18 +164,14 @@ const PolesZeroes = () => {
                             onContextMenu={deletePoint}
                             onMouseMove={dragPoint}
                         >
-                            <div className="point">
 
 
-                                <div className="menu">
-                                    <p>To delete click on the right click</p>
-                                </div>
-                                <FontAwesomeIcon
-                                    icon={point.type ? faXmark : faCircle}
-                                    style={{ width: "100%", height: "100%" }}
+                            <FontAwesomeIcon
+                                icon={point.type ? faXmark : faCircle}
+                                style={{ width: "100%", height: "100%" }}
 
-                                />
-                            </div>
+                            />
+
                         </div>
 
                     ))
@@ -176,15 +181,20 @@ const PolesZeroes = () => {
                 className="custom-btn"
                 checked={type}
                 onlabel='Pole'
-                onstyle='primary'
+                onstyle='secondary'
                 offlabel='Zero'
-                offstyle='danger'
+                offstyle='dark'
                 width='100'
-                style='mx-5'
+                // style='mx-5'
                 onChange={() => {
                     setType(!type)
                 }}
             />
+            <div className="btns">
+
+                <button className='btn btn-outline-danger btn-sm m-2' onClick={clearAllZeros}>Clear all zeros</button>
+                <button className='btn btn-outline-danger btn-sm m-2' onClick={clearAllPoles}>Clear all poles</button>
+            </div>
         </>
     );
 
