@@ -27,6 +27,7 @@ const Graph = ({ x, y, width, height, color }) => {
       data={[trace]}
       layout={layout}
       responsive={true}
+      useResizeHandler={true}
       style={{ width: "100%", height: height }}
     />
   );
