@@ -69,20 +69,20 @@ def maxx(a, b):
     return max_length
 
 
-def equatelength(a, b):
-    max_length = maxx(a, b)
-    i = 0
-    while (i < max_length[0]):
-        if (i < a.shape[0]):
-            a[i] = a[i]
-        else:
-            a[i] = 0
-        if (i < b.shape[0]):
-            b[i] = b[i]
-        else:
-            b[i] = 0
-        i += 1
-    return [a, b]
+def equatelength(a,b):
+    max_length=maxx(a,b)
+    i=0
+    while(i<max_length[0]):
+      if(i<a.shape[0]):
+        a[i]=a[i]
+      else:
+        a=np.append(a,[0])
+      if(i<b.shape[0]):
+        b[i]=b[i]
+      else:
+        b=np.append(b,[0])
+      i+=1
+    return [a,b]
 #
 #  IIR filter implementation of the transfer function H[Z] using the difference equation.
 #
