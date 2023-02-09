@@ -9,6 +9,11 @@ app = Flask(__name__)
 CORS(app)
 
 
+class db:
+    zeros= []
+    poles= []
+
+
 ########################################### Methods ###########################################
 def To_Complex(pairs):
     complexNumbers = [0]*len(pairs)
@@ -154,15 +159,15 @@ def filter_data():
     data = request.get_json()
 
     # get filter zeros
-    zeros = data['zeros']
+    db.zeros = data['zeros']
 
     # get filter poles
-    poles = data['poles']
+    db.poles = data['poles']
 
     # zeros = [[0, 1]]
     # poles = []
-    print(zeros, poles)
-    w, phase, mag = getFrequencyResponce(zeros, poles)
+    # print(zeros, poles)
+    w, phase, mag = getFrequencyResponce(db.zeros, db.poles)
     print(w, phase, mag)
     return {"w": w[1:], "phase": phase[1:], "mag": mag[1:]}, 200
 
@@ -175,10 +180,10 @@ def apply_filter():
     data = request.get_json()
 
     # get filter zeros
-    zeros = data['zeros']
+    # zeros = data['zeros']
 
     # get filter poles
-    poles = data['poles']
+    # poles = data['poles']
 
     # get signal X
     signalX = data['sigX']
@@ -186,10 +191,10 @@ def apply_filter():
     # get signal Y
     signalY = data['sigY']
 
-    print("zeros: ", zeros, "poles: ", poles)
+    # print("zeros: ", zeros, "poles: ", poles)
     # TODO: solve imaginary numbers output
     filteredSignalY = get_yfiltered(
-        signalX, signalY, [[1, 0]], [])
+        signalX, signalY, db.zeros,db.poles)
     # filteredSignalY = signalY
     print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200
