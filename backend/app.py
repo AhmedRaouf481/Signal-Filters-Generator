@@ -180,8 +180,10 @@ def apply_filter():
     # get signal Y
     signalY = data['sigY']
 
-    print(zeros, poles, signalX, signalY)
-    filteredSignalY = get_yfiltered(signalX, signalY, zeros, poles)
+    print("zeros: ", zeros, "poles: ", poles)
+    # TODO: solve imaginary numbers output
+    filteredSignalY = get_yfiltered(
+        signalX, signalY, [[1, 0]], [[0, 1]])
     # filteredSignalY = signalY
     print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200
@@ -189,3 +191,4 @@ def apply_filter():
 
 if __name__ == '__main__':
     app.run(debug=True)
+#  [0, 1, 2, 3, 4, 5], [12, 14, 13, 9, 14, 12, 12], [[1,0]], [[1,0]]

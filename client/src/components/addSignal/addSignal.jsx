@@ -8,9 +8,7 @@ const AddSignal = () => {
     setSignalY,
     signalX,
     setSignalX,
-    zeros,
-    poles,
-
+    polesZeroesList,
     setFilteredSignalY,
   } = useContext(AppContext);
   const [signalLength, setSignalLength] = useState(0);
@@ -23,7 +21,7 @@ const AddSignal = () => {
       setSignalY(signalY.slice(1, signalY.length));
       setSignalX(signalX.slice(1, signalX.length));
     }
-    // addPoint(signalX, signalY);
+    addPoint(signalX, signalY);
   };
 
   const mouseLeave = () => {
@@ -31,6 +29,16 @@ const AddSignal = () => {
   };
 
   const addPoint = (sigX, sigY) => {
+    const zeros = [];
+    const poles = [];
+
+    for (let i = 0; i < polesZeroesList.length; i++) {
+      if (polesZeroesList[i].type === false) {
+        zeros.push([polesZeroesList[i].x, polesZeroesList[i].y]);
+      } else {
+        poles.push([polesZeroesList[i].x, polesZeroesList[i].y]);
+      }
+    }
     axios
       .post("apply-filter", { zeros, poles, sigX, sigY })
       .then((res) => {
