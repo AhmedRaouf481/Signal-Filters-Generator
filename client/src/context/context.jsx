@@ -5,19 +5,16 @@ export const FileContextProvider = ({ children }) => {
   // Test
   const [value, setValue] = useState(0);
 
-  const [polesZeroesList, setPolesZeroesList] = useState([])
-  const [zeros, setZeros] = useState([
-    [0, 1],
-    [1, 0]
-  ]);
-  const [poles, setPoles] = useState([[0, 0]]);
+  const [polesZeroesList, setPolesZeroesList] = useState([]);
+
   const [magPoints, setMagPoints] = useState([]);
   const [phasePoints, setphasePoints] = useState([]);
   const [wPoints, setWPoints] = useState([]);
   const [signalX, setSignalX] = useState([]);
   const [signalY, setSignalY] = useState([]);
   const [filteredSignalY, setFilteredSignalY] = useState([]);
-  //,
+  const [catalogue, setCatalogue] = useState([]);
+
   return (
     <AppContext.Provider
       value={{
@@ -25,10 +22,7 @@ export const FileContextProvider = ({ children }) => {
         setPolesZeroesList,
         value,
         setValue,
-        zeros,
-        setZeros,
-        poles,
-        setPoles,
+
         magPoints,
         setMagPoints,
         phasePoints,
@@ -41,6 +35,8 @@ export const FileContextProvider = ({ children }) => {
         setSignalY,
         filteredSignalY,
         setFilteredSignalY,
+        catalogue,
+        setCatalogue,
       }}
     >
       {children}

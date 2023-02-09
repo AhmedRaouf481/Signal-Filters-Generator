@@ -1,14 +1,19 @@
 .allPasssInput {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  margin: 0 1rem;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 0rem 1rem 0rem 1rem;
+  border: 1px solid #2b2b28;
+  border-radius: 5px;
+  padding: 0.7rem;
+  background-color: #2b2b28;
 }
 
 .symbol {
   color: white;
   margin: 0;
-  font-size: x-large;
+  font-size: 1.3rem;
 }
 
 .css-1x51dt5-MuiInputBase-input-MuiInput-input {

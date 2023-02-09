@@ -22,8 +22,10 @@ const Graph = ({ x, y, width, height, color, title }) => {
       pad: 4,
     },
 
-    xaxis: {},
-    yaxis: {},
+    xaxis: {
+      fixedrange: true,
+    },
+    yaxis: { fixedrange: true },
   };
 
   return (

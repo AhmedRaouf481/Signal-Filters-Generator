@@ -5,27 +5,77 @@ import Graph from "../../components/graph/index";
 import Card from "@mui/material/Card";
 import { CardActionArea } from "@mui/material";
 import Button from "@mui/material/Button";
-import SendIcon from "@mui/icons-material/Send";
-// import { useState } from "react";
-
+import { useState, useContext } from "react";
+import { AppContext } from "../../context/context";
+import axios from "../../globals/api/axios";
 const Catalogue = () => {
-  // const [checked, setChecked] = useState([1]);
+  const [r, setR] = useState("0");
+  const [img, setImg] = useState("0");
 
-  const signalX = [0, 1, 2, 3, 4, 5, 6, 7];
-  const filteredSignalY = [0, 1, 2, 3, 4, 5, 6, 7];
+  const {
+    catalogue,
+    setCatalogue,
+    polesZeroesList,
+    // setPolesZeroesList,
+    // phasePoints,
+    setphasePoints,
+    // wPoints,
+    setWPoints,
+  } = useContext(AppContext);
 
-  // const handleToggle = (a_value) => () => {
-  //   const currentIndex = checked.indexOf(a_value);
-  //   const newChecked = [...checked];
+  const addFilter = (r, img) => {
+    // TODO: set zeros and poles
+    const zeros = [
+      [0, 1],
+      [1, 0],
+    ];
+    const poles = [[0, 0]];
+    axios
+      .post("filter-data", { zeros, poles })
+      .then((res) => {
+        console.log(res.data["w"]);
 
-  //   if (currentIndex === -1) {
-  //     newChecked.push(a_value);
-  //   } else {
-  //     newChecked.splice(currentIndex, 1);
-  //   }
+        setCatalogue([
+          {
+            id: Date.now().toString(),
+            filter: `a=${r}+${img}j`,
+            r: r,
+            img: img,
+            checked: false,
+            x: res.data["w"],
+            y: res.data["phase"],
+            graph: true,
+          },
+          ...catalogue,
+        ]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  //   setChecked(newChecked);
-  // };
+  const applyAllPassFilter = () => {
+    const zeros = [[0, 1]];
+    const poles = [];
+
+    for (let i = 0; i < polesZeroesList.length; i++) {
+      if (polesZeroesList[i].type === false) {
+        zeros.push([polesZeroesList[i].x, polesZeroesList[i].y]);
+      } else {
+        poles.push([polesZeroesList[i].x, polesZeroesList[i].y]);
+      }
+    }
+
+    axios
+      .post("filter-data", { zeros, poles })
+      .then((res) => {
+        setWPoints(res.data["w"]);
+        setphasePoints(res.data["phase"]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <List
@@ -34,7 +84,7 @@ const Catalogue = () => {
         width: "100%",
         maxHeight: "36",
         overflow: "auto",
-        bgcolor: "#2b2b28",
+        bgcolor: "#464643",
         scrollbarWidth: "none",
       }}
     >
@@ -45,11 +95,19 @@ const Catalogue = () => {
           id="filled-number"
           type="number"
           defaultValue="0"
+          step="0.1"
+          onChange={(e) => {
+            setR(e.target.value);
+          }}
           InputLabelProps={{
             shrink: true,
             sx: { color: "white" },
           }}
-          variant="standard"
+          inputProps={{
+            style: { color: "white", textAlign: "center", padding: "0.5rem" },
+            step: 0.1,
+          }}
+          variant="outlined"
         />
         <p className={style.symbol}>+</p>
         <TextField
@@ -57,46 +115,69 @@ const Catalogue = () => {
           id="filled-number"
           type="number"
           defaultValue="0"
+          step="0.1"
+          onChange={(e) => {
+            setImg(e.target.value);
+          }}
           InputLabelProps={{
             shrink: true,
             sx: { color: "white" },
           }}
-          variant="standard"
+          inputProps={{
+            style: { color: "white", textAlign: "center", padding: "0.5rem" },
+            step: 0.1,
+          }}
+          variant="outlined"
         />
         <p className={style.symbol}>j</p>
         <Button
           variant="contained"
-          endIcon={<SendIcon />}
-          sx={{ height: "10%", marginLeft: "5%", marginRight: "5%" }}
+          sx={{ height: "10%", marginLeft: "3%", marginRight: "3%" }}
+          onClick={() => {
+            addFilter(r, img);
+          }}
         >
           Add
         </Button>
       </div>
-      {[
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-        "1+0.9j",
-      ].map((a_value) => {
-        // const labelId = `checkbox-list-secondary-label-${a_value}`;
+      {catalogue.map((value) => {
         return (
-          <Card sx={{ Width: "90%", margin: "5%", height: "15rem" }}>
+          <Card
+            sx={{
+              Width: "100%",
+              margin: "5%",
+              height: "12rem",
+              borderRadius: "15px",
+              border: value["checked"] === true ? "5px solid #4586ff" : "",
+              backgroundColor: value["checked"] === true ? "#2b2b28" : "",
+              opacity: value["checked"] === true ? "0.5" : "1",
+            }}
+            onClick={() => {
+              setCatalogue(
+                catalogue.map((item) => {
+                  if (item["id"] === value["id"]) {
+                    return {
+                      ...item,
+                      checked: !item["checked"],
+                    };
+                  }
+                  return item;
+                })
+              );
+
+              // Todo: apply filter and set poles and zeros
+              applyAllPassFilter();
+            }}
+          >
             <CardActionArea>
-              <div style={{ height: "15rem" }}>
+              <div style={{ height: "12rem" }}>
                 <Graph
-                  x={signalX}
-                  y={filteredSignalY}
+                  x={value["x"]}
+                  y={value["y"]}
                   color="#2b2b28"
                   className={style.graph}
                   height="100%"
-                  title={a_value}
+                  title={value["filter"]}
                 />
               </div>
             </CardActionArea>

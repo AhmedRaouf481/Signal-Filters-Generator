@@ -23,7 +23,7 @@ const AddSignal = () => {
       setSignalY(signalY.slice(1, signalY.length));
       setSignalX(signalX.slice(1, signalX.length));
     }
-    addPoint(signalX, signalY);
+    // addPoint(signalX, signalY);
   };
 
   const mouseLeave = () => {

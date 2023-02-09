@@ -7,15 +7,11 @@ import { AppContext } from "../../context/context.jsx";
 
 import Catalouge from "../../components/catalogue/index";
 function Layout() {
-  const {
-    polesZeroesList,
-    setPolesZeroesList,
-  } = useContext(AppContext);
+  const { polesZeroesList, setPolesZeroesList } = useContext(AppContext);
 
   const [sidebar, setSidebar] = useState(false);
-  
-  const showSidebar = () => setSidebar(!sidebar);
 
+  const showSidebar = () => setSidebar(!sidebar);
 
   const saveFile = async () => {
     const options = {
@@ -31,9 +27,9 @@ function Layout() {
 
     const handle = await window.showSaveFilePicker(options);
     const writable = await handle.createWritable();
-    await writable.write(JSON.stringify({ "polesZeroesList": polesZeroesList }));
+    await writable.write(JSON.stringify({ polesZeroesList: polesZeroesList }));
     await writable.close();
-  }
+  };
 
   const getFile = async () => {
     const options = {
@@ -48,39 +44,42 @@ function Layout() {
       excludeAcceptAllOption: true,
     };
     const [handle] = await window.showOpenFilePicker(options);
-    const file = await handle.getFile()
+    const file = await handle.getFile();
     const content = await file.text();
-    const contentJson = JSON.parse(content)
-    const uploadedPoints = []
+    const contentJson = JSON.parse(content);
+    const uploadedPoints = [];
     contentJson.polesZeroesList.map((uploadedPoint) => {
-      let found = false
+      let found = false;
       polesZeroesList.forEach((point) => {
         if (JSON.stringify(point) === JSON.stringify(uploadedPoint)) {
-          found = true
-          return
+          found = true;
+          return;
         }
-      })
+      });
       if (!found) {
-        uploadedPoints.push(uploadedPoint)
+        uploadedPoints.push(uploadedPoint);
       }
-
-    })
-    setPolesZeroesList([...polesZeroesList, ...uploadedPoints])
-
-  }
+    });
+    setPolesZeroesList([...polesZeroesList, ...uploadedPoints]);
+  };
 
   return (
     <div>
       <div className={style.navBar}>
         <FaIcons.FaBars onClick={showSidebar} className={style.navToggleBtn} />
-        <button className='btn btn-dark btn-sm' onClick={getFile} >Import filter</button>
-        <button className='btn btn-secondary btn-sm p-1 m-1' onClick={saveFile}>Export filter</button>
+        <button className="btn btn-dark btn-sm" onClick={getFile}>
+          Import filter
+        </button>
+        <button className="btn btn-secondary btn-sm p-1 m-1" onClick={saveFile}>
+          Export filter
+        </button>
       </div>
 
       <Home />
 
       <nav className={`${style.navMenu} ${sidebar ? style.active : ""}`}>
         <div className={style.closeBar}>
+          Catalogue
           <AiIcons.AiOutlineClose
             onClick={showSidebar}
             className={`${style.navToggleBtn} ${style.closeBtn}`}
