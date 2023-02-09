@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useRef } from "react";
 export const AppContext = createContext();
 
 export const FileContextProvider = ({ children }) => {
@@ -14,6 +14,10 @@ export const FileContextProvider = ({ children }) => {
   const [signalY, setSignalY] = useState([]);
   const [filteredSignalY, setFilteredSignalY] = useState([]);
   const [catalogue, setCatalogue] = useState([]);
+  const allPassZeros = useRef([])
+  const allPassPoles = useRef([])
+
+
 
   return (
     <AppContext.Provider
@@ -23,6 +27,8 @@ export const FileContextProvider = ({ children }) => {
         value,
         setValue,
 
+        allPassZeros,
+        allPassPoles,
         magPoints,
         setMagPoints,
         phasePoints,

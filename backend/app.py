@@ -10,8 +10,8 @@ CORS(app)
 
 
 class db:
-    zeros= []
-    poles= []
+    zeros = []
+    poles = []
 
 
 ########################################### Methods ###########################################
@@ -69,20 +69,20 @@ def maxx(a, b):
     return max_length
 
 
-def equatelength(a,b):
-    max_length=maxx(a,b)
-    i=0
-    while(i<max_length[0]):
-      if(i<a.shape[0]):
-        a[i]=a[i]
-      else:
-        a=np.append(a,[0])
-      if(i<b.shape[0]):
-        b[i]=b[i]
-      else:
-        b=np.append(b,[0])
-      i+=1
-    return [a,b]
+def equatelength(a, b):
+    max_length = maxx(a, b)
+    i = 0
+    while(i < max_length[0]):
+        if(i < a.shape[0]):
+            a[i] = a[i]
+        else:
+            a = np.append(a, [0])
+        if(i < b.shape[0]):
+            b[i] = b[i]
+        else:
+            b = np.append(b, [0])
+        i += 1
+    return [a, b]
 #
 #  IIR filter implementation of the transfer function H[Z] using the difference equation.
 #
@@ -155,22 +155,55 @@ def get_yfiltered(signal_x, signal_y, zeros, poles):
 @app.route("/api/filter-data", methods=['GET', 'POST'])
 def filter_data():
 
+    allpass = request.args.get("allpass")
+
     # get request data
     data = request.get_json()
 
     # get filter zeros
-    db.zeros = data['zeros']
+    zeros = data['zeros']
 
     # get filter poles
-    db.poles = data['poles']
+    poles = data['poles']
+
+    if not allpass:
+        db.zeros = zeros
+        db.poles = poles
+
 
     # zeros = [[0, 1]]
     # poles = []
     # print(zeros, poles)
-    w, phase, mag = getFrequencyResponce(db.zeros, db.poles)
-    print(w, phase, mag)
+    print(db.zeros, db.poles)
+    w, phase, mag = getFrequencyResponce(zeros, poles)
+    # print(w, phase, mag)
     return {"w": w[1:], "phase": phase[1:], "mag": mag[1:]}, 200
 
+
+@app.route("/api/add-allpassfilter", methods=['GET', 'POST'])
+def add_allpass():
+    
+    # get request data
+    data = request.get_json()
+
+    # get filter zeros
+    zeros = data['zeros']
+
+    # get filter poles
+    poles = data['poles']
+
+    for i in db.zeros:
+        zeros.append(i)
+    for i in db.poles:
+        poles.append(i)
+
+    # zeros = [[0, 1]]
+    # poles = []
+    print(zeros, poles)
+    # print(db.zeros, db.poles)
+    w, phase, mag = getFrequencyResponce(zeros, poles)
+    # print(w, phase, mag)
+    return {"w": w[1:], "phase": phase[1:], "mag": mag[1:]}, 200
 
 # apply filter endpoint
 @app.route("/api/apply-filter", methods=['GET', 'POST'])
@@ -194,7 +227,7 @@ def apply_filter():
     # print("zeros: ", zeros, "poles: ", poles)
     # TODO: solve imaginary numbers output
     filteredSignalY = get_yfiltered(
-        signalX, signalY, db.zeros,db.poles)
+        signalX, signalY, db.zeros, db.poles)
     # filteredSignalY = signalY
     # print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200

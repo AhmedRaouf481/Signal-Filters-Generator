@@ -1,9 +1,7 @@
 import style from "./style.module.css";
 import List from "@mui/material/List";
 import TextField from "@mui/material/TextField";
-import Graph from "../../components/graph/index";
-import Card from "@mui/material/Card";
-import { CardActionArea } from "@mui/material";
+import AllPassCard from "./allPassCard";
 import Button from "@mui/material/Button";
 import { useState, useContext } from "react";
 import { AppContext } from "../../context/context";
@@ -11,18 +9,10 @@ import axios from "../../globals/api/axios";
 const Catalogue = () => {
   const [r, setR] = useState("0");
   const [img, setImg] = useState("0");
-  const [allPassZeros, setallPassZeros] = useState([]);
-  const [allPassPoles, setallPassPoles] = useState([]);
 
   const {
     catalogue,
     setCatalogue,
-    polesZeroesList,
-    // setPolesZeroesList,
-    // phasePoints,
-    setphasePoints,
-    // wPoints,
-    setWPoints,
   } = useContext(AppContext);
 
   const addFilter = (r, img) => {
@@ -34,7 +24,7 @@ const Catalogue = () => {
         const zeros = res.data["zeros"];
         const poles = res.data["poles"];
         axios
-          .post("filter-data", { zeros, poles })
+          .post("filter-data?allpass=true", { zeros, poles })
           .then((res) => {
             console.log(res.data["w"]);
 
@@ -62,28 +52,6 @@ const Catalogue = () => {
       });
   };
 
-  const applyAllPassFilter = () => {
-    const zeros = allPassZeros;
-    const poles = allPassPoles;
-
-    for (let i = 0; i < polesZeroesList.length; i++) {
-      if (polesZeroesList[i].type === false) {
-        zeros.push([polesZeroesList[i].x, polesZeroesList[i].y]);
-      } else {
-        poles.push([polesZeroesList[i].x, polesZeroesList[i].y]);
-      }
-    }
-
-    axios
-      .post("filter-data", { zeros, poles })
-      .then((res) => {
-        setWPoints(res.data["w"]);
-        setphasePoints(res.data["phase"]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   return (
     <List
@@ -159,49 +127,14 @@ const Catalogue = () => {
       </div>
       {catalogue.map((value) => {
         return (
-          <Card
-            sx={{
-              Width: "100%",
-              margin: "5%",
-              height: "12rem",
-              borderRadius: "15px",
-              border: value["checked"] === true ? "5px solid #4586ff" : "",
-              backgroundColor: value["checked"] === true ? "#2b2b28" : "",
-              opacity: value["checked"] === true ? "0.5" : "1",
-            }}
-            onClick={() => {
-              setallPassPoles([]);
-              setallPassZeros([]);
-              setCatalogue(
-                catalogue.map((item) => {
-                  if (item["checked"] === true) {
-                    console.log(item["filter"]);
-                  }
-                  if (item["id"] === value["id"]) {
-                    return {
-                      ...item,
-                      checked: !item["checked"],
-                    };
-                  }
-                  return item;
-                })
-              );
-              applyAllPassFilter();
-            }}
-          >
-            <CardActionArea>
-              <div style={{ height: "12rem" }}>
-                <Graph
-                  x={value["x"]}
-                  y={value["y"]}
-                  color="#2b2b28"
-                  className={style.graph}
-                  height="100%"
-                  title={value["filter"]}
-                />
-              </div>
-            </CardActionArea>
-          </Card>
+          <AllPassCard
+            id={value.id}
+            x={value.x}
+            y={value.y}
+            filter={value.filter}
+            zero={value.zeros}
+            pole={value.poles}
+          />
         );
       })}
     </List>
