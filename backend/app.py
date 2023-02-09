@@ -5,6 +5,7 @@ from numpy.lib.function_base import angle
 import scipy
 import scipy.signal
 app = Flask(__name__)
+
 CORS(app)
 
 
@@ -37,8 +38,13 @@ def getFrequencyResponce(zerosArray, polesArray):
 
 def all_Pass_Filter(zeros_list, poles_list, a_list):
     for index in a_list:
-        poles_list.append(index)
-        zeros_list.append(1/np.conj(index))
+        print("aaaaaaaaa: ", index)
+        if (index.find("+-") != -1):
+            index = index.replace("+-", "-")
+        a = complex(index)
+        poles_list.append([a.real, a.imag])
+        aZero = 1/np.conj(a)
+        zeros_list.append([aZero.real, aZero.imag])
 
     return zeros_list, poles_list
 
@@ -110,7 +116,7 @@ def filter(a, b, n, x, y):
         y_n += b[m]*x[n-m] - a[m]*y[n-m]
         m += 1
 
-    return y_n
+    return y_n.real
 
 # plt.plot(signal_x,signal_y)
 # plt.show()
@@ -183,10 +189,27 @@ def apply_filter():
     print("zeros: ", zeros, "poles: ", poles)
     # TODO: solve imaginary numbers output
     filteredSignalY = get_yfiltered(
-        signalX, signalY, [[1, 0]], [[0, 1]])
+        signalX, signalY, [[1, 0]], [])
     # filteredSignalY = signalY
     print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200
+
+# apply filter endpoint
+
+
+@app.route("/api/allpassfilter", methods=['GET', 'POST'])
+def allpassfilter():
+
+    # get request data
+    data = request.get_json()
+
+    # get filter zeros
+    a = data['a']
+    print("a: "+a)
+    zeros = []
+    poles = []
+    all_Pass_Filter(zeros, poles, [a])
+    return {"zeros": zeros, "poles": poles}, 200
 
 
 if __name__ == '__main__':

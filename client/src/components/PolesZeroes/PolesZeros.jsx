@@ -54,6 +54,7 @@ const PolesZeroes = () => {
       polesZeroesList.indexOf(point) === -1
     ) {
       // save the point in suitable range
+
       setPolesZeroesList((list) => [...list, point]);
     }
   }, [point]);

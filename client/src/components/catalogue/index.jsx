@@ -11,6 +11,8 @@ import axios from "../../globals/api/axios";
 const Catalogue = () => {
   const [r, setR] = useState("0");
   const [img, setImg] = useState("0");
+  const [allPassZeros, setallPassZeros] = useState([]);
+  const [allPassPoles, setallPassPoles] = useState([]);
 
   const {
     catalogue,
@@ -25,29 +27,35 @@ const Catalogue = () => {
 
   const addFilter = (r, img) => {
     // TODO: set zeros and poles
-    const zeros = [
-      [0, 1],
-      [1, 0],
-    ];
-    const poles = [[0, 0]];
+    const a = `${r}+${img}j`;
     axios
-      .post("filter-data", { zeros, poles })
+      .post("allpassfilter", { a })
       .then((res) => {
-        console.log(res.data["w"]);
+        const zeros = res.data["zeros"];
+        const poles = res.data["poles"];
+        axios
+          .post("filter-data", { zeros, poles })
+          .then((res) => {
+            console.log(res.data["w"]);
 
-        setCatalogue([
-          {
-            id: Date.now().toString(),
-            filter: `a=${r}+${img}j`,
-            r: r,
-            img: img,
-            checked: false,
-            x: res.data["w"],
-            y: res.data["phase"],
-            graph: true,
-          },
-          ...catalogue,
-        ]);
+            setCatalogue([
+              {
+                id: Date.now().toString(),
+                filter: `a=${a}`,
+                r: r,
+                img: img,
+                checked: false,
+                zeros: zeros,
+                poles: poles,
+                x: res.data["w"],
+                y: res.data["phase"],
+              },
+              ...catalogue,
+            ]);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -55,8 +63,8 @@ const Catalogue = () => {
   };
 
   const applyAllPassFilter = () => {
-    const zeros = [[0, 1]];
-    const poles = [];
+    const zeros = allPassZeros;
+    const poles = allPassPoles;
 
     for (let i = 0; i < polesZeroesList.length; i++) {
       if (polesZeroesList[i].type === false) {
@@ -134,7 +142,16 @@ const Catalogue = () => {
           variant="contained"
           sx={{ height: "10%", marginLeft: "3%", marginRight: "3%" }}
           onClick={() => {
-            addFilter(r, img);
+            let flag = false;
+            for (let i = 0; i < catalogue.length; i++) {
+              if (catalogue[i].r === r && catalogue[i].img === img) {
+                flag = true;
+                break;
+              }
+            }
+            if (flag === false) {
+              addFilter(r, img);
+            }
           }}
         >
           Add
@@ -153,8 +170,13 @@ const Catalogue = () => {
               opacity: value["checked"] === true ? "0.5" : "1",
             }}
             onClick={() => {
+              setallPassPoles([]);
+              setallPassZeros([]);
               setCatalogue(
                 catalogue.map((item) => {
+                  if (item["checked"] === true) {
+                    console.log(item["filter"]);
+                  }
                   if (item["id"] === value["id"]) {
                     return {
                       ...item,
@@ -164,8 +186,6 @@ const Catalogue = () => {
                   return item;
                 })
               );
-
-              // Todo: apply filter and set poles and zeros
               applyAllPassFilter();
             }}
           >
