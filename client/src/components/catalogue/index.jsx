@@ -6,26 +6,26 @@ import Card from "@mui/material/Card";
 import { CardActionArea } from "@mui/material";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-import { useState } from "react";
+// import { useState } from "react";
 
 const Catalogue = () => {
-  const [checked, setChecked] = useState([1]);
+  // const [checked, setChecked] = useState([1]);
 
   const signalX = [0, 1, 2, 3, 4, 5, 6, 7];
   const filteredSignalY = [0, 1, 2, 3, 4, 5, 6, 7];
 
-  const handleToggle = (a_value) => () => {
-    const currentIndex = checked.indexOf(a_value);
-    const newChecked = [...checked];
+  // const handleToggle = (a_value) => () => {
+  //   const currentIndex = checked.indexOf(a_value);
+  //   const newChecked = [...checked];
 
-    if (currentIndex === -1) {
-      newChecked.push(a_value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+  //   if (currentIndex === -1) {
+  //     newChecked.push(a_value);
+  //   } else {
+  //     newChecked.splice(currentIndex, 1);
+  //   }
 
-    setChecked(newChecked);
-  };
+  //   setChecked(newChecked);
+  // };
 
   return (
     <List
@@ -85,7 +85,7 @@ const Catalogue = () => {
         "1+0.9j",
         "1+0.9j",
       ].map((a_value) => {
-        const labelId = `checkbox-list-secondary-label-${a_value}`;
+        // const labelId = `checkbox-list-secondary-label-${a_value}`;
         return (
           <Card sx={{ Width: "90%", margin: "5%", height: "15rem" }}>
             <CardActionArea>
