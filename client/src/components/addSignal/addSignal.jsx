@@ -29,18 +29,20 @@ const AddSignal = () => {
   };
 
   const addPoint = (sigX, sigY) => {
-    const zeros = [];
-    const poles = [];
+    // const zeros = [];
+    // const poles = [];
 
-    for (let i = 0; i < polesZeroesList.length; i++) {
-      if (polesZeroesList[i].type === false) {
-        zeros.push([polesZeroesList[i].x, polesZeroesList[i].y]);
-      } else {
-        poles.push([polesZeroesList[i].x, polesZeroesList[i].y]);
-      }
-    }
+    // for (let i = 0; i < polesZeroesList.length; i++) {
+    //   if (polesZeroesList[i].type === false) {
+    //     zeros.push([polesZeroesList[i].x, polesZeroesList[i].y]);
+    //   } else {
+    //     poles.push([polesZeroesList[i].x, polesZeroesList[i].y]);
+    //   }
+    // }
     axios
-      .post("apply-filter", { zeros, poles, sigX, sigY })
+      .post("apply-filter", { 
+        // zeros, poles, 
+        sigX, sigY })
       .then((res) => {
         console.log(res.data["filteredSignalY"]);
         setFilteredSignalY(res.data["filteredSignalY"]);

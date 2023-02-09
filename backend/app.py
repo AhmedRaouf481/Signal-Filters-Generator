@@ -196,7 +196,7 @@ def apply_filter():
     filteredSignalY = get_yfiltered(
         signalX, signalY, db.zeros,db.poles)
     # filteredSignalY = signalY
-    print(filteredSignalY)
+    # print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200
 
 # apply filter endpoint
