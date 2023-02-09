@@ -5,6 +5,7 @@ export const FileContextProvider = ({ children }) => {
   // Test
   const [value, setValue] = useState(0);
 
+  const [polesZeroesList, setPolesZeroesList] = useState([])
   const [zeros, setZeros] = useState([
     [0, 1],
     [1, 0]
@@ -20,6 +21,8 @@ export const FileContextProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        polesZeroesList,
+        setPolesZeroesList,
         value,
         setValue,
         zeros,
