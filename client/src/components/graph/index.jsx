@@ -17,20 +17,13 @@ const Graph = ({ x, y, width, height, color, title }) => {
     margin: {
       l: 40,
       r: 25,
-      b: 15,
+      b: 30,
       t: 40,
       pad: 4,
     },
 
-    yaxis: {
-      visible: true,
-      // showticklabels: false,
-    },
-
-    xaxis: {
-      visible: true,
-      showticklabels: false,
-    },
+    xaxis: {},
+    yaxis: {},
   };
 
   return (
