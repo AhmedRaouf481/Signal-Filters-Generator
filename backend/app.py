@@ -12,6 +12,8 @@ CORS(app)
 class db:
     zeros = []
     poles = []
+    allZeros = []
+    allPoles = []
 
 
 ########################################### Methods ###########################################
@@ -187,21 +189,21 @@ def add_allpass():
     data = request.get_json()
 
     # get filter zeros
-    zeros = data['zeros']
+    db.allZeros = data['zeros']
 
     # get filter poles
-    poles = data['poles']
+    db.allPoles = data['poles']
 
     for i in db.zeros:
-        zeros.append(i)
+        db.allZeros.append(i)
     for i in db.poles:
-        poles.append(i)
+        db.allPoles.append(i)
 
     # zeros = [[0, 1]]
     # poles = []
-    print(zeros, poles)
-    # print(db.zeros, db.poles)
-    w, phase, mag = getFrequencyResponce(zeros, poles)
+    print(db.allZeros, db.allPoles)
+    print(db.zeros, db.poles)
+    w, phase, mag = getFrequencyResponce(db.allZeros, db.allPoles)
     # print(w, phase, mag)
     return {"w": w[1:], "phase": phase[1:], "mag": mag[1:]}, 200
 
@@ -212,27 +214,28 @@ def apply_filter():
     # get request data
     data = request.get_json()
 
-    # get filter zeros
-    # zeros = data['zeros']
-
-    # get filter poles
-    # poles = data['poles']
-
     # get signal X
     signalX = data['sigX']
 
     # get signal Y
     signalY = data['sigY']
 
-    # print("zeros: ", zeros, "poles: ", poles)
+    
+    if len(db.allZeros) == 0:
+        zeros = db.zeros
+        poles = db.poles
+    else: 
+        zeros = db.allZeros
+        poles = db.allPoles
+
+    print("zeros: ", zeros, "poles: ", poles)
     # TODO: solve imaginary numbers output
     filteredSignalY = get_yfiltered(
-        signalX, signalY, db.zeros, db.poles)
+        signalX, signalY, zeros, poles)
     # filteredSignalY = signalY
     # print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200
 
-# apply filter endpoint
 
 
 @app.route("/api/allpassfilter", methods=['GET', 'POST'])
