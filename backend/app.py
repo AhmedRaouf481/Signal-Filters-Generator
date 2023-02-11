@@ -125,15 +125,11 @@ def filter(a, b, n, x, y):
 
     return y_n.real
 
-# plt.plot(signal_x,signal_y)
-# plt.show()
 
 
 def get_yfiltered(signal_x, signal_y, zeros, poles):
     a, b = differenceEquationCoefficients(zeros, poles)
     a, b = equatelength(a, b)
-    x = signal_x[0]
-    y = signal_y[0]
     y_filtterd = signal_y[: a.shape[0]]
     # filtering
     cnt = 1
@@ -146,9 +142,6 @@ def get_yfiltered(signal_x, signal_y, zeros, poles):
             cnt += 1
     return y_filtterd
 
-# y_filtterd=get_yfiltered()
-# plt.plot(signal_x,y_filtterd)
-# plt.show()
 
 ########################################### End Points ###########################################
 # filter endpoint
@@ -172,19 +165,14 @@ def filter_data():
         db.zeros = zeros
         db.poles = poles
 
-
-    # zeros = [[0, 1]]
-    # poles = []
-    # print(zeros, poles)
     print(db.zeros, db.poles)
     w, phase, mag = getFrequencyResponce(zeros, poles)
-    # print(w, phase, mag)
     return {"w": w[1:], "phase": phase[1:], "mag": mag[1:]}, 200
 
 
 @app.route("/api/add-allpassfilter", methods=['GET', 'POST'])
 def add_allpass():
-    
+
     # get request data
     data = request.get_json()
 
@@ -199,15 +187,12 @@ def add_allpass():
     for i in db.poles:
         db.allPoles.append(i)
 
-    # zeros = [[0, 1]]
-    # poles = []
-    print(db.allZeros, db.allPoles)
-    print(db.zeros, db.poles)
     w, phase, mag = getFrequencyResponce(db.allZeros, db.allPoles)
-    # print(w, phase, mag)
     return {"w": w[1:], "phase": phase[1:], "mag": mag[1:]}, 200
 
 # apply filter endpoint
+
+
 @app.route("/api/apply-filter", methods=['GET', 'POST'])
 def apply_filter():
 
@@ -220,22 +205,17 @@ def apply_filter():
     # get signal Y
     signalY = data['sigY']
 
-    
     if len(db.allZeros) == 0:
         zeros = db.zeros
         poles = db.poles
-    else: 
+    else:
         zeros = db.allZeros
         poles = db.allPoles
 
-    print("zeros: ", zeros, "poles: ", poles)
-    # TODO: solve imaginary numbers output
+    print(len(signalX), len(signalY))
     filteredSignalY = get_yfiltered(
         signalX, signalY, zeros, poles)
-    # filteredSignalY = signalY
-    # print(filteredSignalY)
     return {"filteredSignalY": filteredSignalY}, 200
-
 
 
 @app.route("/api/allpassfilter", methods=['GET', 'POST'])
@@ -255,4 +235,3 @@ def allpassfilter():
 
 if __name__ == '__main__':
     app.run(debug=True)
-#  [0, 1, 2, 3, 4, 5], [12, 14, 13, 9, 14, 12, 12], [[1,0]], [[1,0]]
