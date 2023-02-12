@@ -59,32 +59,32 @@ def all_Pass_Filter(zeros_list, poles_list, a_list):
 def differenceEquationCoefficients(zeros, poles):
     zeros = To_Complex(zeros)
     poles = To_Complex(poles)
-    b, a = scipy.signal.zpk2tf(zeros, poles, 1)
-    return a, b
+    numerator_coefficients, denominator_coefficients = scipy.signal.zpk2tf(zeros, poles, 1)
+    return denominator_coefficients, numerator_coefficients
 
 
-def maxx(a, b):
-    if (a.shape > b.shape):
-        max_length = a.shape
+def maxx(denominator_coefficients, numerator_coefficients):
+    if (denominator_coefficients.shape > numerator_coefficients.shape):
+        max_length = denominator_coefficients.shape
     else:
-        max_length = b.shape
+        max_length = numerator_coefficients.shape
     return max_length
 
 
-def equatelength(a, b):
-    max_length = maxx(a, b)
+def equatelength(denominator_coefficients, numerator_coefficients):
+    max_length = maxx(denominator_coefficients, numerator_coefficients)
     i = 0
     while(i < max_length[0]):
-        if(i < a.shape[0]):
-            a[i] = a[i]
+        if(i < denominator_coefficients.shape[0]):
+            denominator_coefficients[i] = denominator_coefficients[i]
         else:
-            a = np.append(a, [0])
-        if(i < b.shape[0]):
-            b[i] = b[i]
+            denominator_coefficients = np.append(denominator_coefficients, [0])
+        if(i < numerator_coefficients.shape[0]):
+            numerator_coefficients[i] = numerator_coefficients[i]
         else:
-            b = np.append(b, [0])
+            numerator_coefficients = np.append(numerator_coefficients, [0])
         i += 1
-    return [a, b]
+    return [denominator_coefficients, numerator_coefficients]
 #
 #  IIR filter implementation of the transfer function H[Z] using the difference equation.
 #
@@ -110,17 +110,17 @@ def equatelength(a, b):
 #
 
 
-def filter(a, b, n, x, y):
-    filter_order = maxx(a, b)
-    if (a.shape != b.shape):
-        equatelength(a, b)
-    if (n < filter_order[0]):
-        return y[n]
+def filter(denominator_coefficients, numerator_coefficients, sample_point_index, input_samples, filterd_samples):
+    filter_order = maxx(denominator_coefficients, numerator_coefficients)
+    if (denominator_coefficients.shape != numerator_coefficients.shape):
+        equatelength(denominator_coefficients, numerator_coefficients)
+    if (sample_point_index < filter_order[0]):
+        return filterd_samples[sample_point_index]
 
-    y_n = b[0]*x[n]
+    y_n = numerator_coefficients[0]*input_samples[sample_point_index]
     m = 1
     while (m < filter_order[0]):
-        y_n += b[m]*x[n-m] - a[m]*y[n-m]
+        y_n += numerator_coefficients[m]*input_samples[sample_point_index-m] - denominator_coefficients[m]*filterd_samples[sample_point_index-m]
         m += 1
 
     return y_n.real
@@ -128,17 +128,17 @@ def filter(a, b, n, x, y):
 
 
 def get_yfiltered(signal_x, signal_y, zeros, poles):
-    a, b = differenceEquationCoefficients(zeros, poles)
-    a, b = equatelength(a, b)
-    y_filtterd = signal_y[: a.shape[0]]
+    denominator_coefficients, numerator_coefficients = differenceEquationCoefficients(zeros, poles)
+    denominator_coefficients, numerator_coefficients = equatelength(denominator_coefficients, numerator_coefficients)
+    y_filtterd = signal_y[: denominator_coefficients.shape[0]]
     # filtering
     cnt = 1
     while (cnt < len(signal_x)):
         if (cnt < len(y_filtterd)):
-            y_filtterd[cnt] = filter(a, b, cnt, signal_y, y_filtterd)
+            y_filtterd[cnt] = filter(denominator_coefficients, numerator_coefficients, cnt, signal_y, y_filtterd)
             cnt += 1
         else:
-            y_filtterd.append(filter(a, b, cnt, signal_y, y_filtterd))
+            y_filtterd.append(filter(denominator_coefficients, numerator_coefficients, cnt, signal_y, y_filtterd))
             cnt += 1
     return y_filtterd
 
